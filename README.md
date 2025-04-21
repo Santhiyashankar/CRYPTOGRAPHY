@@ -1,11 +1,9 @@
-# CRYPTOGRAPHY
-HILL CIPHER
-EX. NO: 1(C) AIM:
+# HILL CIPHER
+# EX. NO: 1(C) IMPLEMENTATION OF HILL CIPHER
  
+## AIM
 
-IMPLEMENTATION OF HILL CIPHER
- 
-## To write a C program to implement the hill cipher substitution techniques.
+To write a C program to implement the hill cipher substitution techniques.
 
 ## DESCRIPTION:
 
@@ -29,60 +27,58 @@ STEP-4: Multiply the two matrices to obtain the cipher text of length three.
 STEP-5: Combine all these groups to get the complete cipher text.
 
 ## PROGRAM 
+```
+import numpy as np
+
+def text_to_numbers(text):
+    return [ord(char) - ord('A') for char in text]
+
+def numbers_to_text(numbers):
+    return ''.join(chr(num + ord('A')) for num in numbers)
+
+def hill_cipher_encrypt(plaintext, key):
+    n = len(key)
+    plaintext = plaintext.upper().replace(" ", "")
+    while len(plaintext) % n != 0:
+        plaintext += 'X'  # Padding with 'X'
+    
+    text_numbers = text_to_numbers(plaintext)
+    key_matrix = np.array(key)
+    
+    encrypted_numbers = []
+    for i in range(0, len(text_numbers), n):
+        block = np.array(text_numbers[i:i+n]).reshape(n, 1)
+        encrypted_block = np.dot(key_matrix, block) % 26
+        encrypted_numbers.extend(encrypted_block.flatten())
+    
+    return numbers_to_text(encrypted_numbers)
+
+def hill_cipher_decrypt(ciphertext, key):
+    n = len(key)
+    key_matrix = np.array(key)
+    key_inverse = np.linalg.inv(key_matrix) * np.linalg.det(key_matrix)
+    key_inverse = np.round(key_inverse).astype(int) % 26  # Modular inverse approximation
+    
+    text_numbers = text_to_numbers(ciphertext)
+    decrypted_numbers = []
+    for i in range(0, len(text_numbers), n):
+        block = np.array(text_numbers[i:i+n]).reshape(n, 1)
+        decrypted_block = np.dot(key_inverse, block) % 26
+        decrypted_numbers.extend(decrypted_block.flatten())
+    
+    return numbers_to_text(decrypted_numbers)
+
+if __name__ == "__main__":
+    plaintext = input("Enter plaintext: ")
+    key = [[6, 24, 1], [13, 16, 10], [20, 17, 15]]  # Example key matrix
+    ciphertext = hill_cipher_encrypt(plaintext, key)
+    print("Encrypted Text:", ciphertext)
+    decrypted_text = hill_cipher_decrypt(ciphertext, key)
+    print("Decrypted Text:", decrypted_text)
 
 ```
-
- #include<stdio.h>
- #include<string.h>
- int main()
- {
-    unsigned int a[3][3]={{6,24,1},{13,16,10},{20,17,15}};
-    unsigned int b[3][3]={{8,5,10},{21,8,21},{21,12,8}};
-    int i,j, t=0;
-    unsigned int c[20],d[20];
-    char msg[20];
-    printf("Enter plain text:");
-    scanf("%s",msg);
-    for(i=0;i<strlen(msg);i++)
-    {
-        c[i]=msg[i]-65;
-        printf("%d ",c[i]);
-    }
-    for(i=0;i<3;i++)
-    {
-        t=0;
-        for(j=0;j<3;j++)
-        {
-            t=t+(a[i][j]*c[j]);
-        }
-        d[i]=t%26;
-    }
-    printf("\nEncrypted Cipher Text :");
-    for(i=0;i<3;i++)
-    printf(" %c",d[i]+65);
-    for(i=0;i<3;i++)
-    {
-        t=0;
-        for(j=0;j<3;j++)
-        {
-            t=t+(b[i][j]*d[j]);
-        }
-        c[i]=t%26;
-    }
-    printf("\nDecrypted Cipher Text :");
-    for(i=0;i<3;i++)
-    printf(" %c",c[i]+65);
-    getchar();
-    return 0;
- }
-```
-
-
 ## OUTPUT
-
-![image](https://github.com/user-attachments/assets/5ac24ab4-76ea-4f84-a6d6-e26e931ea353)
-
+![Screenshot 2025-03-27 090723](https://github.com/user-attachments/assets/ea5637f2-429f-4f37-bdf7-7f6710c5a152)
 
 ## RESULT
-
-Thus the program is executed and the output is verified.
+Thus, a python program is implement for hill cipher substitution techniques.
